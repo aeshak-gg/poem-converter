@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sentence to Poem</title>
+  <style>
+    body { font-family: sans-serif; max-width: 600px; margin: 40px auto; padding: 20px; line-height: 1.6; }
+    textarea, select, button { width: 100%; margin-top: 10px; padding: 10px; box-sizing: border-box; }
+    #output { margin-top: 20px; padding: 15px; background: #f4f4f4; border-radius: 5px; white-space: pre-wrap; }
+  </style>
+</head>
+<body>
+  <h2>Sentence to Poem Converter</h2>
+  <textarea id="sentence" rows="3" placeholder="Enter your sentence..."></textarea>
+  <select id="style">
+    <option value="Shakespearean Iambic Pentameter">Shakespearean</option>
+    <option value="Modern Free Verse">Modern Free Verse</option>
+    <option value="Haiku">Haiku</option>
+  </select>
+  <button onclick="generatePoem()">Transform</button>
+  <div id="output">Your poem will appear here...</div>
+
+  <script>
+    async function generatePoem() {
+      const sentence = document.getElementById('sentence').value;
+      const style = document.getElementById('style').value;
+      const outputDiv = document.getElementById('output');
+
+      if (!sentence.trim()) return;
+      outputDiv.innerText = "Crafting your poem...";
+
+      try {
+        const response = await fetch('/.netlify/functions/poem', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ sentence, style })
+        });
+        const data = await response.json();
+        outputDiv.innerText = data.poem || "Error generating poem.";
+      } catch (err) {
+        outputDiv.innerText = "Error connecting to server.";
+      }
+    }
+  </script>
+</body>
+</html>
