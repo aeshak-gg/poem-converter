@@ -8,7 +8,7 @@ exports.handler = async function(event, context) {
   try {
     const { sentence, style } = JSON.parse(event.body);
     const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-    const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
     const prompt = `Convert the following English sentence into a poem.\nStyle: ${style}\nSentence: "${sentence}"`;
     const result = await model.generateContent(prompt);
